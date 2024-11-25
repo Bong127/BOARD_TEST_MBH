@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>게시판</h1>
+    <a href="/board/insert">글쓰기</a>
+    <table border="1">
+        <tr>
+            <th width="50">번호</th>
+            <th width="300">제목</th>
+            <th width="100">작성자</th>
+            <th width="200">등록일자</th>
+            <th width="200">수정일자</th>
+        </tr>
+        <th:block th:each="board : ${boardList}">
+            <tr>
+                <td align="center" th:text="${board.no}"></td>
+                <td>
+                    <a th:href="|/board/read/${board.no}|" 
+                    th:text="${board.title}"></a>
+                </td>
+                <td align="center" th:text="${board.writer}"></td>
+                <td align="center">
+                    <span th:text="${ #dates.format( board.createdAt, 'yyyy-MM-dd HH:mm:ss' ) }"></span>
+                </td>
+                <td align="center">
+                    <span th:text="${ #dates.format( board.updatedAt, 'yyyy-MM-dd HH:mm:ss' ) }"></span>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+    <div>
+        <a th:href="@{/board/list(page=${page.first})}">[처음]</a>
+        <th:block th:if="${page.page != page.first }">
+            <a th:href="|/board/list?page=${page.prev}|">[이전]</a>
+        </th:block>
+        <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
+             <th:block th:if="${page.page==no}">
+                <b><span th:text="${no}"></span></b>
+             </th:block>
+             <th:block th:if="${page.page!=no}">
+                <a th:href="|/board/list?page=${no}|" th:text="${no}"></a>
+             </th:block>
+        </th:block>
+        <th:block th:if="${page.page != page.last }">
+            <a th:href="|/board/list?page=${page.next}|">[다음]</a>
+        </th:block>
+        <a th:href="|/board/list?page=${page.last}|">[마지막]</a>
+    </div>
+</body>
+</html>
